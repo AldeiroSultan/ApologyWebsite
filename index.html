@@ -42,6 +42,7 @@
                 0 0 0 8px #fff,
                 0 0 0 12px #ff69b4;
             image-rendering: pixelated;
+            margin: 20px;
         }
 
         .message {
@@ -49,7 +50,6 @@
             color: #ff69b4;
             margin-bottom: 20px;
             animation: float 3s ease-in-out infinite;
-            /* Text shadow removed */
             line-height: 1.5;
             letter-spacing: 1px;
         }
@@ -72,6 +72,7 @@
             display: flex;
             gap: 15px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         button {
@@ -142,9 +143,28 @@
             0% { transform: translateY(100vh) rotate(0deg); }
             100% { transform: translateY(-100vh) rotate(360deg); }
         }
+
+        .play-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff69b4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <audio id="bgMusic" loop>
+        <source src="sadHamster.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="play-button" id="playButton">▶ Play Music</button>
+
     <div class="container">
         <div class="message">I am so sorry Aziza,<br>please forgive me</div>
         
@@ -159,6 +179,37 @@
     <div class="hearts"></div>
 
     <script>
+        // Audio handling
+        const bgMusic = document.getElementById('bgMusic');
+        const playButton = document.getElementById('playButton');
+        
+        // Try to play automatically
+        window.addEventListener('load', function() {
+            const playPromise = bgMusic.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    // Show play button if autoplay fails
+                    playButton.style.display = 'block';
+                });
+            }
+        });
+
+        // Play button click handler
+        playButton.addEventListener('click', function() {
+            bgMusic.play();
+            playButton.style.display = 'none';
+        });
+
+        // Play on first interaction if autoplay failed
+        document.addEventListener('click', function() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                playButton.style.display = 'none';
+            }
+        }, { once: true });
+
+        // Button functionality
         const dontForgiveBtn = document.getElementById('dontForgiveBtn');
         const forgiveBtn = document.getElementById('forgiveBtn');
         let isRunning = false;
@@ -203,7 +254,4 @@
         });
     </script>
 </body>
-<audio autoplay loop>
-    <source src="sadHamster.mp3" type="audio/mpeg">
-</audio>
 </html>
