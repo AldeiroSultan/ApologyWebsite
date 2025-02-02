@@ -255,17 +255,14 @@
             
             button.addEventListener('click', showForgiveness);
             document.body.appendChild(button);
+            buttonCount++;
         }
 
+        // Modified to create just one button per click
         dontForgiveBtn.addEventListener('click', function() {
-            const interval = setInterval(() => {
-                if (buttonCount < 50) {
-                    createForgiveButton();
-                    buttonCount++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 100);
+            if (buttonCount < 50) {  // Still limit total buttons to 50
+                createForgiveButton();
+            }
         });
 
         forgiveBtn.addEventListener('click', showForgiveness);
